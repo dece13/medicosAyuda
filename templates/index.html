@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interfaz de chat</title>
+    <style>
+        /* Estilos CSS para la interfaz */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            width: 1000px; /* Ajusta el ancho del chat según tus preferencias */
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #chat-messages {
+            height: 500px; /* Ajusta el alto del chat según tus preferencias */
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        #chat-messages img {
+            max-width: 300px; /* Ajusta el tamaño máximo de la imagen según tus preferencias */
+            max-height: 300px; /* Ajusta el tamaño máximo de la imagen según tus preferencias */
+        }
+        #input-message {
+            width: 100%;
+            margin-top: 10px;
+            padding: 5px;
+        }
+        #input-image {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-messages">
+            <!-- Aquí se mostrarán los mensajes del chat -->
+            {% for message in messages %}
+            <p>{{ message.username }}: {{ message.message }}</p>
+            {% if message.image %}
+            <img src="{{ url_for('static', filename='css/uploads/') }}{{ message.image }}" alt="Imagen">
+            {% endif %}
+            {% endfor %}
+        </div>
+        <input type="text" id="input-message" placeholder="Escribe tu mensaje...">
+        <input type="file" id="input-image" accept=".jpg, .png, .jpeg">
+        <button id="send-button">Enviar</button>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const inputMessage = document.getElementById('input-message');
+        const inputImage = document.getElementById('input-image');
+        const sendButton = document.getElementById('send-button');
+    
+        sendButton.addEventListener('click', () => {
+            const message = inputMessage.value;
+            const imageFile = inputImage.files[0];
+    
+            // Validación de mensaje no vacío
+            if (message.trim() === '') {
+                alert('El mensaje no puede estar vacío.');
+                return;
+            }
+    
+            // Validación de selección de imagen
+            if (!imageFile) {
+                alert('Por favor, selecciona una imagen.');
+                return;
+            }
+    
+            // Crear objeto FormData para enviar el mensaje y la imagen en la solicitud
+            const formData = new FormData();
+            formData.append('username', 'NombreDeUsuario'); // Cambia 'NombreDeUsuario' por el nombre real del usuario
+            formData.append('message', message);
+            formData.append('image', imageFile);
+    
+            // Enviar los datos al servidor utilizando fetch()
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                // Crear un nuevo elemento <p> para el nuevo mensaje y agregarlo al contenedor
+                const newMessageElement = document.createElement('p');
+                newMessageElement.textContent = 'NombreDeUsuario: ' + message; // Coloca aquí el contenido del mensaje
+                chatMessages.appendChild(newMessageElement);
+
+                // Construir la URL de la imagen utilizando url_for
+                const imageSrc = "{{ url_for('static', filename='css/uploads/') }}" + imageFile.name;
+
+                // Crear un nuevo elemento <img> para la imagen y agregarlo al contenedor si existe
+                const newImageElement = document.createElement('img');
+                newImageElement.src = imageSrc; // Utilizar la URL de la imagen construida
+                newImageElement.alt = 'Imagen';
+                chatMessages.appendChild(newImageElement);
+    
+                inputMessage.value = ''; // Limpiar el campo de entrada de mensajes
+            })
+            .catch(error => {
+                // Manejar errores de la solicitud si los hay
+                console.error('Error al enviar la solicitud:', error);
+            });
+        });
+    </script>
+</body>
+</html>
