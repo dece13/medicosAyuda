@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
+import random
 
 app = Flask(__name__)
 
@@ -16,9 +17,10 @@ app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png'}
 # Modelo de mensaje
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50))
-    message = db.Column(db.String(200))
+    username = db.Column(db.String(50), nullable=False)
+    message = db.Column(db.String(500), nullable=False)
     image = db.Column(db.String(100))
+    hueso_roto = db.Column(db.Boolean, default=False)
 
 # Ruta de la página principal
 @app.route('/')
@@ -39,14 +41,19 @@ def upload():
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(image_path)
 
-        # Crear un nuevo mensaje y guardarlo en la base de datos
-        new_message = Message(username=username, message=message, image=filename)
+        # Simulación de la detección de hueso roto (valor aleatorio)
+        hueso_roto = random.choice([True, False])
+
+        # Actualizar el campo 'hueso_roto' en la base de datos
+        new_message = Message(username=username, message=message, image=filename, hueso_roto=hueso_roto)
         db.session.add(new_message)
         db.session.commit()
 
-        # Actualizar la lista de mensajes en la página
-        messages = Message.query.all()
-        return render_template('index.html', messages=messages)
+        # Crear mensaje sobre hueso roto o no
+        response_message = 'Hueso roto' if hueso_roto else 'No roto'
+
+        # Retornar solo el mensaje de respuesta (sin HTML completo)
+        return response_message
 
     else:
         return "Error: Archivo no válido"

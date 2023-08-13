@@ -5,3 +5,4 @@ class Message(db.Model):
     username = db.Column(db.String(50), nullable=False)
     message = db.Column(db.String(500), nullable=False)
     image = db.Column(db.String(100))
+    hueso_roto = db.Column(db.Boolean, default=False)
