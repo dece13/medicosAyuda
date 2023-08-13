@@ -90,10 +90,10 @@
                 const newMessageElement = document.createElement('p');
                 newMessageElement.textContent = 'NombreDeUsuario: ' + message; // Coloca aquí el contenido del mensaje
                 chatMessages.appendChild(newMessageElement);
-
+    
                 // Construir la URL de la imagen utilizando url_for
                 const imageSrc = "{{ url_for('static', filename='css/uploads/') }}" + imageFile.name;
-
+    
                 // Crear un nuevo elemento <img> para la imagen y agregarlo al contenedor si existe
                 const newImageElement = document.createElement('img');
                 newImageElement.src = imageSrc; // Utilizar la URL de la imagen construida
@@ -108,5 +108,6 @@
             });
         });
     </script>
+    
 </body>
 </html>

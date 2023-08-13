@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-import random  # Importa la biblioteca random
 import os
 
 app = Flask(__name__)
@@ -18,7 +17,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png'}
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
-    message = db.Column(db.String(500))
+    message = db.Column(db.String(200))
     image = db.Column(db.String(100))
 
 # Ruta de la página principal
@@ -45,20 +44,12 @@ def upload():
         db.session.add(new_message)
         db.session.commit()
 
-        # Simula el procesamiento aleatorio: categoría 'roto' o 'no roto'
-        categories = ['roto', 'no roto']
-        random_category = random.choice(categories)
-
-        # Redirige al usuario a la página con la categoría aleatoria
-        return redirect(url_for('categorize', category=random_category))
+        # Actualizar la lista de mensajes en la página
+        messages = Message.query.all()
+        return render_template('index.html', messages=messages)
 
     else:
         return "Error: Archivo no válido"
-    
-# Ruta para mostrar la categoría aleatoria
-@app.route('/categorize/<category>')
-def categorize(category):
-    return f"La imagen se ha categorizado como: {category}"
 
 # Función para verificar la extensión del archivo permitida
 def allowed_file(filename):
