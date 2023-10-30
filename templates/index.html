@@ -1,43 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Interfaz de chat</title>
-    <style>
-        /* Estilos CSS para la interfaz */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #chat-container {
-            width: 1000px; /* Ajusta el ancho del chat según tus preferencias */
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #chat-messages {
-            height: 500px; /* Ajusta el alto del chat según tus preferencias */
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-        #chat-messages img {
-            max-width: 300px; /* Ajusta el tamaño máximo de la imagen según tus preferencias */
-            max-height: 300px; /* Ajusta el tamaño máximo de la imagen según tus preferencias */
-        }
-        #input-message {
-            width: 100%;
-            margin-top: 10px;
-            padding: 5px;
-        }
-        #input-image {
-            margin-top: 10px;
-            padding: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static\css/style.css">
+    <link rel="icon" href="/static/css/uploads/logo.png" />
+
 </head>
+
 <body>
     <div id="chat-container">
         <div id="chat-messages">
+           
             <!-- Aquí se mostrarán los mensajes del chat -->
             {% for message in messages %}
             <p>{{ message.username }}: {{ message.message }}</p>
@@ -49,9 +23,13 @@
             {% endif %}
             {% endfor %}
         </div>
-        <input type="text" id="input-message" placeholder="Escribe tu mensaje...">
-        <input type="file" id="input-image" accept=".jpg, .png, .jpeg">
-        <button id="send-button">Enviar</button>
+        <div class="inputcontainer">
+            <input type="text" class="input__message" id="input-message" placeholder="Escribe tu mensaje...">
+            <button class="send__button" id="send-button">Enviar</button>
+        </div>
+
+        <input type="file" class="input__image" id="input-image" accept=".jpg, .png, .jpeg">
+
     </div>
 
     <script>
@@ -59,29 +37,29 @@
         const inputMessage = document.getElementById('input-message');
         const inputImage = document.getElementById('input-image');
         const sendButton = document.getElementById('send-button');
-    
+
         sendButton.addEventListener('click', () => {
             const message = inputMessage.value;
             const imageFile = inputImage.files[0];
-    
+
             // Validación de mensaje no vacío
             if (message.trim() === '') {
                 alert('El mensaje no puede estar vacío.');
                 return;
             }
-    
+
             // Validación de selección de imagen
             if (!imageFile) {
                 alert('Por favor, selecciona una imagen.');
                 return;
             }
-    
+
             // Crear objeto FormData para enviar el mensaje y la imagen en la solicitud
             const formData = new FormData();
             formData.append('username', 'NombreDeUsuario'); // Cambia 'NombreDeUsuario' por el nombre real del usuario
             formData.append('message', message);
             formData.append('image', imageFile);
-    
+
             // Enviar los datos al servidor utilizando fetch()
         fetch('/upload', {
             method: 'POST',
@@ -120,6 +98,7 @@
         });
     });
     </script>
-    
+
 </body>
+
 </html>
