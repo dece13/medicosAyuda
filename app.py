@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from predecir import predecir
 import os
 import random
-
 app = Flask(__name__)
 
 # Configuración de la base de datos
@@ -42,7 +42,8 @@ def upload():
         image_file.save(image_path)
 
         # Simulación de la detección de hueso roto (valor aleatorio)
-        hueso_roto = random.choice([True, False])
+        predicc = predecir(image_path)  # Llamada a la función predecir desde predecir.py
+        hueso_roto = False if predicc == 1 else True
 
         # Actualizar el campo 'hueso_roto' en la base de datos
         new_message = Message(username=username, message=message, image=filename, hueso_roto=hueso_roto)
