@@ -1,0 +1,121 @@
+ /* Estilos CSS para la interfaz */
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+#chat-title {
+    text-align: center;
+    font-size: 36px; /* Aumenta el tamaño del título */
+    margin-top: 20px;
+    background-color: #4CAF50; /* Cambia el color de fondo del título a verde */
+    color: #fff; /* Cambia el color del texto del título a blanco */
+    padding: 10px 0; /* Añade relleno al título */
+}
+#chat-container {
+    width: 100%;
+    max-width: 800px; /* Aumenta el ancho del chat */
+    margin: 20px auto; /* Añade margen en la parte superior y deja espacio para el título */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    
+}
+
+.user-bubble-container {
+    text-align: right; /* Alinea el contenedor a la derecha */
+}
+
+.user-bubble {
+    display: inline-block; /* Permite que los mensajes estén alineados a la derecha */
+    background-color: #4CAF50; /* Cambia el color de fondo a verde */
+    color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.bot-bubble {
+    background-color: #007BFF; /* Cambia el color de fondo a azul */
+    color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.image {
+    max-width: 300px; /* Limita el ancho de las imágenes a 300px */
+    height: auto; /* Mantiene la proporción de aspecto */
+    margin: 10px 10px 0 auto; /* Agrega margen superior e inferior y margen izquierdo y derecho */
+}
+
+.image-container {
+    text-align: right; /* Alinea el contenedor de imágenes a la izquierda */
+}
+
+#chat-messages {
+    height: 400px;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+#input-message {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+#input-image {
+    margin-top: 10px;
+}
+
+#send-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.response-bubble {
+    background-color: #007BFF; /* Cambia el color de fondo a azul */
+    color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+#choose-files-label 
+{
+display: inline-block;
+cursor: pointer;
+background-color: #007BFF;
+color: #fff;
+padding: 10px 20px;
+border-radius: 5px;
+transition: background-color 0.3s ease-in-out;
+}
+
+#choose-files-label:hover 
+{
+background-color: #0056b3;
+}
+
+
+#choose-files-label i 
+{
+margin-right: 5px;
+}
