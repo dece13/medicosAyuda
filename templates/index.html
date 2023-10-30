@@ -1,35 +1,172 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Interfaz de chat</title>
-    <link rel="stylesheet" href="/static\css/style.css">
-    <link rel="icon" href="/static/css/uploads/logo.png" />
+    <title>Chat de DIAGNOAI</title>
+    <style>
+        /* Estilos CSS para la interfaz */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        #chat-title {
+            text-align: center;
+            font-size: 36px; /* Aumenta el tamaño del título */
+            margin-top: 20px;
+            background-color: #4CAF50; /* Cambia el color de fondo del título a verde */
+            color: #fff; /* Cambia el color del texto del título a blanco */
+            padding: 10px 0; /* Añade relleno al título */
+        }
+        #chat-container {
+            width: 100%;
+            max-width: 800px; /* Aumenta el ancho del chat */
+            margin: 20px auto; /* Añade margen en la parte superior y deja espacio para el título */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            
+        }
 
+        .user-bubble-container {
+            text-align: right; /* Alinea el contenedor a la derecha */
+        }
+
+        .user-bubble {
+            display: inline-block; /* Permite que los mensajes estén alineados a la derecha */
+            background-color: #4CAF50; /* Cambia el color de fondo a verde */
+            color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .bot-bubble {
+            background-color: #007BFF; /* Cambia el color de fondo a azul */
+            color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .image {
+            max-width: 300px; /* Limita el ancho de las imágenes a 300px */
+            height: auto; /* Mantiene la proporción de aspecto */
+            margin: 10px 10px 0 auto; /* Agrega margen superior e inferior y margen izquierdo y derecho */
+        }
+
+        .image-container {
+            text-align: right; /* Alinea el contenedor de imágenes a la izquierda */
+        }
+
+        #chat-messages {
+            height: 400px;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        #input-message {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        #input-image {
+            margin-top: 10px;
+        }
+
+        #send-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .response-bubble {
+            background-color: #007BFF; /* Cambia el color de fondo a azul */
+            color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin: 5px 10px; /* Agrega un poco de margen vertical y horizontal */
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        #choose-files-label 
+        {
+        display: inline-block;
+        cursor: pointer;
+        background-color: #007BFF;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+        }
+
+        #choose-files-label:hover 
+        {
+        background-color: #0056b3;
+        }
+
+        
+        #choose-files-label i 
+        {
+        margin-right: 5px;
+        }
+
+    </style>
 </head>
-
 <body>
+    <h1 id="chat-title">DIAGNOAI</h1>
     <div id="chat-container">
         <div id="chat-messages">
-           
             <!-- Aquí se mostrarán los mensajes del chat -->
             {% for message in messages %}
-            <p>{{ message.username }}: {{ message.message }}</p>
-            {% if message.image %}
-            <img src="{{ url_for('static', filename='css/uploads/') }}{{ message.image }}" alt="Imagen">
-            {% endif %}
-            {% if message.hueso_roto is not none %}
-            <p>{{ 'Hueso roto' if message.hueso_roto else 'No roto' }}</p>
-            {% endif %}
+                {% if message.username == 'Dr. MediApp' %}
+                <div class="user-bubble-container">
+                    <div class="user-bubble">
+                        {{ message.message }}
+                    </div>
+                </div>
+                {% endif %}
+                {% if message.image %}
+                <div class="image-container">
+                    <img class="image" src="{{ url_for('static', filename='css/uploads/' + message.image) }}" alt="Imagen">
+                </div>
+                {% endif %}
+                {% if message.username != 'Dr. MediApp' %}
+                <div class="bot-bubble">
+                    {{ message.message }}
+                </div>
+                {% endif %}
+                {% if message.hueso_roto is not none %}
+                <div class="response-bubble">
+                    {{ 'Hueso roto' if message.hueso_roto else 'No roto' }}
+                </div>
+                {% endif %}
             {% endfor %}
         </div>
-        <div class="inputcontainer">
-            <input type="text" class="input__message" id="input-message" placeholder="Escribe tu mensaje...">
-            <button class="send__button" id="send-button">Enviar</button>
-        </div>
-
-        <input type="file" class="input__image" id="input-image" accept=".jpg, .png, .jpeg">
-
+        <input type="text" id="input-message" placeholder="Escribe tu mensaje...">
+        <label for="input-image" id="choose-files-label">
+            <i class="fas fa-paperclip"></i>
+            Adjuntar archivo
+        </label>
+        <input type="file" id="input-image" accept=".jpg, .png, .jpeg" style="display: none;">
+        
+        <button id="send-button">
+            <i class="fas fa-paper-plane"></i> Enviar
+        </button>
     </div>
 
     <script>
@@ -39,66 +176,88 @@
         const sendButton = document.getElementById('send-button');
 
         sendButton.addEventListener('click', () => {
-            const message = inputMessage.value;
-            const imageFile = inputImage.files[0];
+    const message = inputMessage.value;
+    const imageFile = inputImage.files[0];
 
-            // Validación de mensaje no vacío
-            if (message.trim() === '') {
-                alert('El mensaje no puede estar vacío.');
-                return;
-            }
+    // Validación de mensaje no vacío
+    if (message.trim() === '') {
+        alert('El mensaje no puede estar vacío.');
+        return;
+    }
 
-            // Validación de selección de imagen
-            if (!imageFile) {
-                alert('Por favor, selecciona una imagen.');
-                return;
-            }
+    // Validación de selección de imagen
+    if (!imageFile) {
+        alert('Por favor, selecciona una imagen.');
+        return;
+    }
 
-            // Crear objeto FormData para enviar el mensaje y la imagen en la solicitud
-            const formData = new FormData();
-            formData.append('username', 'NombreDeUsuario'); // Cambia 'NombreDeUsuario' por el nombre real del usuario
-            formData.append('message', message);
-            formData.append('image', imageFile);
+    // Crear objeto FormData para enviar el mensaje y la imagen en la solicitud
+    const formData = new FormData();
+    formData.append('username', 'Dr. MediApp'); // Cambia 'NombreDeUsuario' por el nombre real del usuario
+    formData.append('message', message);
+    formData.append('image', imageFile);
 
-            // Enviar los datos al servidor utilizando fetch()
-        fetch('/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(result => {
-            // Crear un nuevo elemento <p> para el nuevo mensaje y agregarlo al contenedor
-            const newMessageElement = document.createElement('p');
-            newMessageElement.textContent = 'NombreDeUsuario: ' + message; // Coloca aquí el contenido del mensaje
+    // Enviar los datos al servidor utilizando fetch()
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(result => {
+        // Crear un nuevo elemento <div> para el nuevo mensaje y agregarlo al contenedor
+        const newMessageElement = document.createElement('div');
+        if (message === 'Hueso roto' || message === 'No roto') {
+            newMessageElement.className = 'bot-bubble';
+        } else {
+            newMessageElement.className = 'user-bubble-container';
+        }
+        
+        const messageBubble = document.createElement('div');
+        messageBubble.className = 'user-bubble';
+        messageBubble.textContent = message;
+        newMessageElement.appendChild(messageBubble);
 
-            // Construir la URL de la imagen utilizando url_for
-            const imageSrc = "{{ url_for('static', filename='css/uploads/') }}" + imageFile.name;
+        // Construir la URL de la imagen utilizando url_for
+        const imageSrc = "{{ url_for('static', filename='css/uploads/') }}" + imageFile.name;
 
-            // Agregar primero la imagen, luego el mensaje sobre hueso roto o no
-            chatMessages.appendChild(newMessageElement);
+        // Crear un nuevo elemento <div> para el contenedor de la imagen y agregarlo al contenedor principal
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'image-container';
+        const newImageElement = document.createElement('img');
+        newImageElement.src = imageSrc; // Utilizar la URL de la imagen construida
+        newImageElement.alt = 'Imagen';
+        newImageElement.className = 'image';
+        imageContainer.appendChild(newImageElement);
+        newMessageElement.appendChild(imageContainer);
 
+        // Agregar el nuevo mensaje al chat
+        chatMessages.appendChild(newMessageElement);
 
-            // Crear un nuevo elemento <img> para la imagen y agregarlo al contenedor si existe
-            const newImageElement = document.createElement('img');
-            newImageElement.src = imageSrc; // Utilizar la URL de la imagen construida
-            newImageElement.alt = 'Imagen';
-            chatMessages.appendChild(newImageElement);
+        // Crear un nuevo elemento <div> para la respuesta de la IA y agregarlo al contenedor
+        const responseBubble = document.createElement('div');
+        responseBubble.className = 'response-bubble';
+        responseBubble.textContent = result; // Utilizar el resultado recibido del servidor
 
-            
-            // Crear un nuevo elemento <p> para la respuesta sobre hueso roto o no
-            const newResponseElement = document.createElement('p');
-            newResponseElement.textContent = result; // Utilizar el resultado recibido del servidor
-            chatMessages.appendChild(newResponseElement);
+        // Si es una respuesta de la IA, alinearla a la izquierda
+        if (message !== 'Hueso roto' && message !== 'No roto') {
+            responseBubble.style.textAlign = 'left';
+        }
 
-            inputMessage.value = ''; // Limpiar el campo de entrada de mensajes
-        })
-        .catch(error => {
-            // Manejar errores de la solicitud si los hay
-            console.error('Error al enviar la solicitud:', error);
-        });
+        chatMessages.appendChild(responseBubble); // Agregar la respuesta al chat
+
+        inputMessage.value = ''; // Limpiar el campo de entrada de mensajes
+    })
+    .catch(error => {
+        // Manejar errores de la solicitud si los hay
+        console.error('Error al enviar la solicitud:', error);
     });
+});
+                    
     </script>
 
+    <!-- Agrega la biblioteca de Font Awesome para el icono -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <!-- Agrega la biblioteca de Font Awesome para el icono -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
-
 </html>
